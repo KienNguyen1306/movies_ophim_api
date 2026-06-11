@@ -1,5 +1,14 @@
 "use client";
-import { Search, Bell, User, Menu, X, LogOut, LogIn, UserPlus } from "lucide-react";
+import {
+  Search,
+  Bell,
+  User,
+  Menu,
+  X,
+  LogOut,
+  LogIn,
+  UserPlus,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
@@ -89,17 +98,26 @@ export function Header() {
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
             <span className="text-primary-foreground font-bold text-sm">C</span>
           </div>
-          <span className="text-foreground font-bold text-xl hidden sm:block">CineTube</span>
+          <span className="text-foreground font-bold text-xl hidden sm:block">
+            CineTube
+          </span>
         </Link>
       </div>
 
-      <form ref={wrapperRef} onSubmit={handleSearch} className="flex-1 max-w-xl mx-auto relative">
+      <form
+        ref={wrapperRef}
+        onSubmit={handleSearch}
+        className="flex-1 max-w-xl mx-auto relative"
+      >
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input
             type="text"
             value={query}
-            onChange={(e) => { setQuery(e.target.value); setShowDropdown(true); }}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setShowDropdown(true);
+            }}
             onFocus={() => setShowDropdown(true)}
             placeholder="Tìm phim, diễn viên..."
             className="w-full bg-secondary border border-border rounded-full py-2 pl-10 pr-9 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary transition-all"
@@ -107,7 +125,10 @@ export function Header() {
           {query && (
             <button
               type="button"
-              onClick={() => { setQuery(""); setShowDropdown(false); }}
+              onClick={() => {
+                setQuery("");
+                setShowDropdown(false);
+              }}
               className="cursor-pointer absolute right-3 top-1/2 -translate-y-1/2"
             >
               <X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
@@ -118,7 +139,9 @@ export function Header() {
         {showDropdown && debounced.length > 1 && (
           <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-xl overflow-hidden z-50">
             {isFetching && results.length === 0 && (
-              <div className="px-4 py-3 text-sm text-muted-foreground">Đang tìm...</div>
+              <div className="px-4 py-3 text-sm text-muted-foreground">
+                Đang tìm...
+              </div>
             )}
             {results.map((movie) => (
               <button
@@ -134,9 +157,12 @@ export function Header() {
                   className="w-12 h-7 rounded object-cover shrink-0"
                 />
                 <div className="min-w-0">
-                  <p className="text-sm font-medium text-foreground truncate">{movie.title}</p>
+                  <p className="text-sm font-medium text-foreground truncate">
+                    {movie.title}
+                  </p>
                   <p className="text-xs text-muted-foreground truncate">
-                    {movie.year} {movie.episodeCurrent ? `· ${movie.episodeCurrent}` : ""}
+                    {movie.year}{" "}
+                    {movie.episodeCurrent ? `· ${movie.episodeCurrent}` : ""}
                   </p>
                 </div>
               </button>
@@ -169,20 +195,31 @@ export function Header() {
               className="cursor-pointer w-9 h-9 rounded-full bg-primary flex items-center justify-center hover:opacity-90 transition-opacity"
               title={user.name}
             >
-              <span className="text-primary-foreground font-semibold text-sm">{initial}</span>
+              <span className="text-primary-foreground font-semibold text-sm">
+                {initial}
+              </span>
             </button>
             {showUserMenu && (
               <div className="absolute right-0 top-full mt-2 w-60 bg-card border border-border rounded-xl shadow-xl overflow-hidden z-50">
                 <div className="px-4 py-3 border-b border-border">
-                  <p className="text-sm font-semibold text-foreground truncate">{user.name}</p>
-                  <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                  <p className="text-sm font-semibold text-foreground truncate">
+                    {user.name}
+                  </p>
+                  <p className="text-xs text-muted-foreground truncate">
+                    {user.email}
+                  </p>
                 </div>
-                <button
-                  onClick={() => { setShowUserMenu(false); toast.notImplemented(); }}
+
+                <Link
+                  href="/profile"
+                  onClick={() => {
+                    setShowUserMenu(false);
+                    // toast.notImplemented();
+                  }}
                   className="cursor-pointer w-full flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-accent transition-colors text-left"
                 >
                   <User className="w-4 h-4" /> Trang cá nhân
-                </button>
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="cursor-pointer w-full flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-accent transition-colors text-left border-t border-border"
