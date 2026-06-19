@@ -43,6 +43,9 @@ export const imgUrl = (path) => {
 
 // ─── Normalizers ──────────────────────────────────────────────────────────────
 
+export const isTrailer = (it) =>
+  (it.episode_current || "").trim().toLowerCase() === "trailer";
+
 export const normalizeItem = (it) => ({
   id: it.slug,
   slug: it.slug,
@@ -66,8 +69,12 @@ export const normalizeItem = (it) => ({
 // ─── API functions ────────────────────────────────────────────────────────────
 
 export const fetchLatest = async (page = 1) => {
-  const data = await proxyFetch("/danh-sach/phim-moi-cap-nhat", { page });
-  return (data.items || []).map(normalizeItem);
+  const data = await proxyFetch("/v1/api/danh-sach/phim-moi-cap-nhat", {
+    page,
+    limit: 12,
+  });
+  const items = data?.data?.items || [];
+  return items.filter((it) => !isTrailer(it)).map(normalizeItem);
 };
 
 export const fetchByTypeList = async (typeList, page = 1, limit = 12) => {
@@ -78,7 +85,10 @@ export const fetchByTypeList = async (typeList, page = 1, limit = 12) => {
   const items = data?.data?.items || [];
   const pagination = data?.data?.params?.pagination;
   return {
-    items: items.map(normalizeItem),
+    items: (typeList === "phim-sap-chieu"
+      ? items
+      : items.filter((it) => !isTrailer(it))
+    ).map(normalizeItem),
     totalPages: pagination
       ? Math.max(
           1,
@@ -93,7 +103,7 @@ export const fetchByCategory = async (slug, page = 1, limit = 24) => {
   const items = data?.data?.items || [];
   const pagination = data?.data?.params?.pagination;
   return {
-    items: items.map(normalizeItem),
+    items: items.filter((it) => !isTrailer(it)).map(normalizeItem),
     title: data?.data?.titlePage || slug,
     totalPages: pagination
       ? Math.max(
@@ -109,7 +119,7 @@ export const fetchByCountry = async (slug, page = 1, limit = 24) => {
   const items = data?.data?.items || [];
   const pagination = data?.data?.params?.pagination;
   return {
-    items: items.map(normalizeItem),
+    items: items.filter((it) => !isTrailer(it)).map(normalizeItem),
     title: data?.data?.titlePage || slug,
     totalPages: pagination
       ? Math.max(
@@ -130,7 +140,7 @@ export const searchMovies = async (keyword, page = 1, limit = 24) => {
   const items = data?.data?.items || [];
   const pagination = data?.data?.params?.pagination;
   return {
-    items: items.map(normalizeItem),
+    items: items.filter((it) => !isTrailer(it)).map(normalizeItem),
     totalPages: pagination
       ? Math.max(
           1,
