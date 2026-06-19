@@ -20,9 +20,7 @@ const IMG_BASE = "https://img.ophim.live/uploads/movies/";
  */
 async function proxyFetch(path, params = {}) {
   const q = new URLSearchParams(
-    Object.fromEntries(
-      Object.entries(params).map(([k, v]) => [k, String(v)])
-    )
+    Object.fromEntries(Object.entries(params).map(([k, v]) => [k, String(v)])),
   ).toString();
 
   const proxyUrl = `/api/proxy?path=${encodeURIComponent(path)}${q ? `&q=${encodeURIComponent(q)}` : ""}`;
@@ -30,8 +28,8 @@ async function proxyFetch(path, params = {}) {
   const res = await fetch(proxyUrl);
   if (!res.ok) throw new Error(`Proxy error: ${res.status}`);
 
-  const token = await res.text();   // chuỗi base64 mã hóa
-  return decrypt(token);            // giải mã → dữ liệu gốc
+  const token = await res.text(); // chuỗi base64 mã hóa
+  return decrypt(token); // giải mã → dữ liệu gốc
 }
 
 // ─── Image URL ────────────────────────────────────────────────────────────────
@@ -73,13 +71,19 @@ export const fetchLatest = async (page = 1) => {
 };
 
 export const fetchByTypeList = async (typeList, page = 1, limit = 12) => {
-  const data = await proxyFetch(`/v1/api/danh-sach/${typeList}`, { page, limit });
+  const data = await proxyFetch(`/v1/api/danh-sach/${typeList}`, {
+    page,
+    limit,
+  });
   const items = data?.data?.items || [];
   const pagination = data?.data?.params?.pagination;
   return {
     items: items.map(normalizeItem),
     totalPages: pagination
-      ? Math.max(1, Math.ceil(pagination.totalItems / pagination.totalItemsPerPage))
+      ? Math.max(
+          1,
+          Math.ceil(pagination.totalItems / pagination.totalItemsPerPage),
+        )
       : 1,
   };
 };
@@ -92,7 +96,10 @@ export const fetchByCategory = async (slug, page = 1, limit = 24) => {
     items: items.map(normalizeItem),
     title: data?.data?.titlePage || slug,
     totalPages: pagination
-      ? Math.max(1, Math.ceil(pagination.totalItems / pagination.totalItemsPerPage))
+      ? Math.max(
+          1,
+          Math.ceil(pagination.totalItems / pagination.totalItemsPerPage),
+        )
       : 1,
   };
 };
@@ -105,7 +112,10 @@ export const fetchByCountry = async (slug, page = 1, limit = 24) => {
     items: items.map(normalizeItem),
     title: data?.data?.titlePage || slug,
     totalPages: pagination
-      ? Math.max(1, Math.ceil(pagination.totalItems / pagination.totalItemsPerPage))
+      ? Math.max(
+          1,
+          Math.ceil(pagination.totalItems / pagination.totalItemsPerPage),
+        )
       : 1,
   };
 };
@@ -122,7 +132,10 @@ export const searchMovies = async (keyword, page = 1, limit = 24) => {
   return {
     items: items.map(normalizeItem),
     totalPages: pagination
-      ? Math.max(1, Math.ceil(pagination.totalItems / pagination.totalItemsPerPage))
+      ? Math.max(
+          1,
+          Math.ceil(pagination.totalItems / pagination.totalItemsPerPage),
+        )
       : 1,
   };
 };
