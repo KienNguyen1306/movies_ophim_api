@@ -8,7 +8,7 @@
 
 import { decrypt } from "@/lib/crypto";
 
-const IMG_BASE = "https://img.ophim.live/uploads/movies/";
+const IMG_BASE = "https://img.ophim.live/";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
